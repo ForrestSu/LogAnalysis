@@ -59,7 +59,7 @@
                     var one=data[i];
                     var oBuffer = "<tr class=\""+class_type+"\">";
                     for(var j=0;j<one.length;j++){
-                       oBuffer=oBuffer+("<"+tds + "title=\""+one[j]+"\">"+ one[j] + "</"+tds+">");
+                       oBuffer=oBuffer+("<"+tds + " title=\""+one[j]+"\">"+ one[j] + "</"+tds+">");
                     }
                      tds="td";
                      oBuffer=oBuffer+"</tr>";

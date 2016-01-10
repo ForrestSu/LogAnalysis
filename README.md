@@ -6,5 +6,7 @@ LogAnalysis is a simple logcat tool, supported fix and common log, enjoy it.
 
 ##Performance Testing
 ![performance](./doc/performance.png)
-<center>performance</center>
+<center>performance</center> 
+
+##  
 Copyright @2016-01
