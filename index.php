@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8">
-    <title>Log Analysis 1.0</title>
+    <title>Log Analysis 1.1</title>
     <link rel=stylesheet href='files/style.css' type='text/css'>
     <link rel="shortcut icon" href="files/logo.ico">
     <SCRIPT type="text/javascript" src="jquery/jquery-1.11.2.min.js"></SCRIPT> 
@@ -12,7 +12,7 @@
       $.ajax({
                 url: "./analisys.php", 
                 type: "POST",
-                data: {funcno:document.getElementById("search").value,logs:document.getElementById("input_text").value },
+                data: {filtstr:document.getElementById("search").value,logs:document.getElementById("input_text").value },
                 datatype: "json",
                 success: function (resp) {
                     showtable(resp);
@@ -28,7 +28,7 @@
            document.getElementById("msg").innerHTML="解析出错：<font color='red'>"+resp.data+"</font>";
            return 0;
         }else{
-           document.getElementById("msg").innerHTML="<font color='blue'>"+resp.counts+"</font> 条记录";
+           document.getElementById("msg").innerHTML="<font color='blue'> "+resp.counts+"</font> records";
         } 
         //清空之前解析的内容
         document.getElementById("user_rec").innerHTML="";
@@ -90,10 +90,10 @@
    <div id="markup">
    <article id="content" class="markdown-body">
  
-       <h3>Log Analysis v1.0</h3>
+       <h3>Log Analysis v1.1</h3>
        <textarea style="width:100%" cols="30" rows="4" id="input_text"    name="input_text"></textarea> <br/>
-       功能号<input style="width:20%" title="请输入功能号如: 010,7003" type="text" id="search" name="search" class="input-small search-query">
-        <strong id="msg"> </strong>  
+       Filter&nbsp;<input style="width:20%" oninput="javascript:getJSON();" title="Input keywords likes 010(filter FUNCNO like 1003,1004 -f)" type="text" id="search" name="search" class="input-small search-query">
+        <font  id="msg"> </font>  
        <input type="button" style="float:right" class="btn btn-info" id="btn" value="Resolves" onClick="javascript:getJSON();"/>
        
        <TABLE>

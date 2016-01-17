@@ -4,13 +4,13 @@ ini_set("display_errors","Off");
  * 根据是否含有FIXT判断是否为fix日志
  */
 static $NeedTranslate=true;
- $FIX_FLAG='FIXT';
+define('FIX_FLAG','FIXT');
 //通用_调用和返回log标志
-static $LOG0='InPara';
-static $LOG1='OutPara';
+define('LOG0','InPara');
+define('LOG1','OutPara');
 //五版_调用和返回log标志
-static $FIX_LOG0='incomeing:';
-static $FIX_LOG1='outgoing:';
+define('FIX_LOG0','incomeing:');
+define('FIX_LOG1','outgoing:');
 /////////dictionary///////////////
 $fixdict= array('010' =>  '现货' ,
 				'020' =>  '质押式回购' ,

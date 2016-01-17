@@ -2,7 +2,7 @@
 /*font-family: "Helvetica Light",Helvetica,"Microsoft YaHei",arial;*/
 @import url(./bootstrap/css/bootstrap.css);
 body {
-    font-family: "Microsoft YaHei","Helvetica Light",Helvetica,arial;
+    font-family: Helvetica,"Microsoft YaHei",consolas,arial;
     font-size: 14px;
     line-height: 1.6;
     padding-top: 10px;
