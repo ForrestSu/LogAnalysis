@@ -37,6 +37,7 @@ if(isset($_POST['logs']) and isset($_POST['filtstr']) ){
         echo json_encode(PackObjSetErr(-1,"[post]：Data too Long!len=".strlen($logs)));
         exit(0);
     } 
+    write_to_log('【'.$str.'】'.$logs);
     echo json_encode( AnalisysLog($logs) );
 }
 else{
@@ -44,6 +45,14 @@ else{
 } 
 exit(0);
 ////////////////end main//////////////
+    function write_to_log($str) {
+       $str = str_replace(array("\r\n", "\r", "\n"), "<soh>", $str); 
+       $str='【'.date('Y-m-d H:i:s').'】'.$str."\r\n";
+       if($fd = @fopen('log.log', "a")) {
+          fputs($fd, $str);
+          fclose($fd);
+       }
+    }  
     /*返回错误信息*/
     function PackObjSetErr($cnt,$error_info){
          $ret =new ObjSet();

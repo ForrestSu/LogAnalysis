@@ -266,13 +266,14 @@ kbd {
 .markdown-body table th, .markdown-body table td {
     border: 1px solid #CCCCCC;
     padding: 1px 4px;
+    text-align: center;/*单元格中的文本居中*/
 }
 /**sunquan 2015-12-22 add*/
 .markdown-body table th, .markdown-body table td {
     /*如果超过最大列宽，用...代替*/
     white-space: nowrap;
      /*最大列宽 */
-    max-width: 100px;
+    max-width: 150px;
     overflow: hidden;/* 内容超出宽度时隐藏超出部分的内容 */
     text-overflow: ellipsis;/* 当对象内文本溢出时显示省略标记(...),需与overflow:hidden;一起使用*/ 
 }
