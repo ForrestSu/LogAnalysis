@@ -33,11 +33,11 @@ if(isset($_POST['logs']) and isset($_POST['filtstr']) ){
     if(substr($str, -2)=='-f') $FuncNo=trim(substr($str,0,strlen($str)-2)) ;
     else $FiltStr=$str;//内容检索
     //限制数据长度10W,1秒内可以解析并加载完毕
-    if(strlen($logs)>100000 or strlen($str)>30){
+    if(strlen($logs)>400000 or strlen($str)>30){
         echo json_encode(PackObjSetErr(-1,"[post]：Data too Long!len=".strlen($logs)));
         exit(0);
     } 
-    write_to_log('【'.$str.'】'.$logs);
+   // write_to_log('【'.$str.'】'.$logs);
     echo json_encode( AnalisysLog($logs) );
 }
 else{
@@ -45,14 +45,6 @@ else{
 } 
 exit(0);
 ////////////////end main//////////////
-    function write_to_log($str) {
-       $str = str_replace(array("\r\n", "\r", "\n"), "<soh>", $str); 
-       $str='【'.date('Y-m-d H:i:s').'】'.$str."\r\n";
-       if($fd = @fopen('log.log', "a")) {
-          fputs($fd, $str);
-          fclose($fd);
-       }
-    }  
     /*返回错误信息*/
     function PackObjSetErr($cnt,$error_info){
          $ret =new ObjSet();
@@ -196,4 +188,12 @@ exit(0);
         if($cnt>0) $obj->data=$ResultSet;
         return $obj;    
     }
+    /* function write_to_log($str) {
+       $str = str_replace(array("\r\n", "\r", "\n"), "<soh>", $str); 
+       $str='【'.date('Y-m-d H:i:s').'】'.$str."\r\n";
+       if($fd = @fopen('log.log', "a")) {
+          fputs($fd, $str);
+          fclose($fd);
+       }
+    }     */
 ?>
