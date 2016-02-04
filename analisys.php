@@ -123,7 +123,8 @@ exit(0);
                       //need translate Key to value, at first check key must exsist!
                        if($GLOBALS['NeedTranslate'] and array_key_exists($tmpkey,$GLOBAL_BUSSI_DICT)) 
                           $tmpkey = $GLOBAL_BUSSI_DICT[$tmpkey].'('.$tmpkey.')';
-                       $ResultSet[$tmpkey] = substr($one,$pos+1);
+                       if (empty($ResultSet[$tmpkey])) $ResultSet[$tmpkey]= substr($one,$pos+1);
+                       else $ResultSet[$tmpkey]=$ResultSet[$tmpkey].'<br/>'.substr($one,$pos+1);
                     }  
                 }       
             }
