@@ -58,8 +58,9 @@
                 for(var i=0;i<data.length;i++){
                     var one=data[i];
                     var oBuffer = "<tr class=\""+class_type+"\">";
+                    oBuffer+="<"+tds+">"+(tds=="th"?"Time":jsonObj.message_time)+"</"+tds+">";
                     for(var j=0;j<one.length;j++){
-                       oBuffer=oBuffer+("<"+tds + " title=\""+one[j]+"\">"+ one[j] + "</"+tds+">");
+                       oBuffer += ("<"+tds + " title=\""+one[j]+"\">"+ one[j] + "</"+tds+">");
                     }
                      tds="td";
                      oBuffer=oBuffer+"</tr>";

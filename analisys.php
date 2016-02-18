@@ -161,7 +161,7 @@ exit(0);
         $arr01 = explode($tag, $oneline);
         $pos=strpos($arr01[0],'No:');
         if($pos!==false)
-        {
+        {  $obj->message_time=substr($arr01[0],0,8);
            $obj->func_no=substr($arr01[0],$pos+3,4);
         }//如果需要按功能号过滤，且当前数据包的功能号不在过滤列表，直接返回
         if( (!empty($GLOBALS['FuncNo'])) and (stripos($GLOBALS['FuncNo'],$obj->func_no)===false) ) 
