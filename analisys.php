@@ -100,7 +100,7 @@ exit(0);
              return $func($oneline,1,$out,$filter);           
         }// 不支持的数据包
         else{
-             return PackMsgErr(-1,'[errorinfo]=不是标准的Packet或FIX数据包=>'.$oneline);
+             return PackMsgErr(-1,'['.$oneline.']不是标准的FIX(Packet)数据包');
         }
     }
     //1 解析一行 fix 日志

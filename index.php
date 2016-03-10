@@ -41,7 +41,7 @@
             var message_type = jsonObj.message_type;
             if(message_type == -1)
             { 
-                $("#user_rec").append("<tr><td>error</td></tr><tr><td>"+jsonObj.data+"</td></tr>");
+                $("#user_rec").append("<tr><td>error</td></tr><tr><td title=\""+jsonObj.data+"\">"+jsonObj.data+"</td></tr>");
                 continue;
             }
             //如果Message数据包为空，直接退出
