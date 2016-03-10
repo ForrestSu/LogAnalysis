@@ -28,7 +28,7 @@
            document.getElementById("msg").innerHTML="解析出错：<font color='red'>"+resp.data+"</font>";
            return 0;
         }else{
-           document.getElementById("msg").innerHTML="<font color='blue'> "+resp.counts+"</font> records";
+           document.getElementById("msg").innerHTML="<font color='blue'> "+resp.counts+"</font> records  "+"<font color='blue'>"+resp.cost_time+"</font>s";
         } 
         //清空之前解析的内容
         document.getElementById("user_rec").innerHTML="";
@@ -90,9 +90,8 @@
  <div class="container">
    <div id="markup">
    <article id="content" class="markdown-body">
- 
        <h3>Log Analysis v1.1</h3>
-       <textarea style="width:100%" cols="30" rows="4" id="input_text"    name="input_text"></textarea> <br/>
+       <textarea style="width:100%" cols="30" rows="4" id="input_text" name="input_text" maxlength="300000"></textarea> <br/>
        Filter&nbsp;<input style="width:20%" oninput="javascript:getJSON();" title="Input keywords likes 010(filter FUNCNO like 1003,1004 -f)" type="text" id="search" name="search" class="input-small search-query">
         <font  id="msg"> </font>  
        <input type="button" style="float:right" class="btn btn-info" id="btn" value="Resolves" onClick="javascript:getJSON();"/>

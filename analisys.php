@@ -11,7 +11,7 @@ require_once('./include/const_info.php');
 define('SPLIT_CHAR',chr(1));//定义一个ASCII常量SOH
 class Message{
     public $func_no      = '' ; //功能号
-    public $message_time = '0'; //消息时间
+    public $message_time = '-'; //消息时间
     public $message_type =  0 ; //消息类型 0-收到的packet 1-发送出去的packet 2-收到的fix,3-发出去的fix
     public $data         = null;//消息内容
 }
@@ -21,7 +21,8 @@ class Message{
  */
 class ObjSet{
     public $data         = null; // save message array
-    public $counts       = 0;    // length of message array 
+    public $counts       = 0;    // length of message array
+    public $cost_time    = 0;    // cost time  
 }
  //global  variable, for filter FUNCNO
   $FuncNo='';
@@ -62,6 +63,9 @@ exit(0);
         $ret =new ObjSet();
         $objs =array();
         $cnt = 0; 
+        //getTimeSeconds
+        $times = explode(' ', microtime());
+        $begin = floatval($times[0])+floatval($times[1]);
         //start deal log data...
         $lines = explode(chr(10),$content);
         foreach($lines as $oneline){
@@ -80,6 +84,9 @@ exit(0);
         {
             $ret->data=$objs;
             $ret->counts=$cnt;
+            //again getTimeSeconds 
+            $times = explode(' ', microtime());
+            $ret->cost_time=round(floatval($times[0])+floatval($times[1])-$begin,3);
         }
         return $ret;
     }
@@ -160,8 +167,10 @@ exit(0);
         $cnt = 0;
         $arr01 = explode($tag, $oneline);
         $pos=strpos($arr01[0],'No:');
+        //消息时间
+        $obj->message_time=substr($arr01[0],0,8);
         if($pos!==false)
-        {  $obj->message_time=substr($arr01[0],0,8);
+        {  
            $obj->func_no=substr($arr01[0],$pos+3,4);
         }//如果需要按功能号过滤，且当前数据包的功能号不在过滤列表，直接返回
         if( (!empty($GLOBALS['FuncNo'])) and (stripos($GLOBALS['FuncNo'],$obj->func_no)===false) ) 
