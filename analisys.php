@@ -27,10 +27,12 @@ class ObjSet{
  //global  variable, for filter FUNCNO
   $FuncNo='';
   $FiltStr=''; 
+  $RePack=false;
 /////////////////////主函数////////////////////
 if(isset($_POST['logs']) and isset($_POST['filtstr']) ){
     $logs=$_POST['logs'];
     $str=trim($_POST['filtstr']);
+    if($_POST['repack']=='true')$RePack=True;
     if(substr($str, -2)=='-f') $FuncNo=trim(substr($str,0,strlen($str)-2)) ;
     else $FiltStr=$str;//内容检索
     //限制数据长度10W,1秒内可以解析并加载完毕
@@ -168,7 +170,7 @@ exit(0);
         $arr01 = explode($tag, $oneline);
         $pos=strpos($arr01[0],'No:');
         //消息时间
-        $obj->message_time=substr($arr01[0],0,8);
+        $obj->message_time=substr($arr01[0],0,12);
         if($pos!==false)
         {  
            $obj->func_no=substr($arr01[0],$pos+3,4);
@@ -185,14 +187,30 @@ exit(0);
             $row = (int)$arrlog[1]; //row size
             $col = (int)$arrlog[0]; //col size
             if($row>0)//filter 0 rows log data 
-            for($i=0; $i<=$row; $i++) {
-               // if($i==0){}这里可以指定表头显示的先后顺序
-               for($j=0; $j < $col; $j++){
-                   $ResultOne[$j] = $arrlog[ $i * $col + $j + 2];
-                   //if read from logfile:  //iconv('gb2312','utf-8',$arrlog[ $i * $col + $j + 2]);
-               }
-               $ResultSet[$cnt++]= $ResultOne;
-               unset($ResultOne);//clear $ResultOne 
+            {
+                if($GLOBALS['RePack'])
+                {
+                    $prefix='AddField(\'';$ResultOne[0]='';
+                    for($i=0; $i<=$row; $i++) {
+                       for($j=0; $j < $col; $j++)
+                         $ResultOne[0] = $ResultOne[0].'<br/>'.$prefix.$arrlog[ $i * $col + $j + 2].'\');';
+                       $ResultOne[0] = $ResultOne[0].'<br/>';
+                       $prefix='AddValue(\'';
+                    }
+                    $ResultOne[0] = 'with TmpPack.Sections[0] do <br/>begin <br/> SetRange('.$arrlog[0].', '.$arrlog[1].');'.$ResultOne[0].'<br/>end;';
+                    $ResultSet[$cnt++]= $ResultOne;
+                }
+                else
+                {   for($i=0; $i<=$row; $i++) {
+                     // if($i==0){}这里可以指定表头显示的先后顺序
+                       for($j=0; $j < $col; $j++){
+                       $ResultOne[$j] = $arrlog[ $i * $col + $j + 2];
+                       //if read from logfile:  //iconv('gb2312','utf-8',$arrlog[ $i * $col + $j + 2]);
+                       }
+                       $ResultSet[$cnt++]= $ResultOne;
+                       unset($ResultOne);//clear $ResultOne 
+                    }
+                }
             }
         }
         if($cnt>0) $obj->data=$ResultSet;

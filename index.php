@@ -12,7 +12,9 @@
       $.ajax({
                 url: "./analisys.php", 
                 type: "POST",
-                data: {filtstr:document.getElementById("search").value,logs:document.getElementById("input_text").value },
+                data: {filtstr:document.getElementById("search").value,
+                       logs:document.getElementById("input_text").value,
+                       repack:document.getElementById("repack").checked},
                 datatype: "json",
                 success: function (resp) {
                     showtable(resp);
@@ -27,9 +29,8 @@
         if(resp.counts == -1){
            document.getElementById("msg").innerHTML="解析出错：<font color='red'>"+resp.data+"</font>";
            return 0;
-        }else{
-           document.getElementById("msg").innerHTML="<font color='blue'> "+resp.counts+"</font> records  "+"<font color='blue'>"+resp.cost_time+"</font>s";
-        } 
+        }
+        document.getElementById("msg").innerHTML="<font color='blue'> "+resp.counts+"</font> records  "+"<font color='blue'>"+resp.cost_time+"</font>s";
         //清空之前解析的内容
         document.getElementById("user_rec").innerHTML="";
         var retset = new Array();
@@ -48,7 +49,7 @@
             if( (!jsonObj.data)||(jsonObj.data=== null)) continue;
             // 显示功能号
             if(jsonObj.func_no != '')
-                $("#user_rec").append("<tr><td>"+jsonObj.func_no+"</td></tr>");
+                $("#user_rec").append("<tr><td title=\""+jsonObj.func_no+"\">"+jsonObj.func_no+"</td></tr>");
             var class_type=(message_type%2==0)?"inpararow":"outpararow";
             var tds="th";
             if(message_type < 2)//1 如果是转换机日志
@@ -94,6 +95,7 @@
        <textarea style="width:100%" cols="30" rows="4" id="input_text" name="input_text" maxlength="300000"></textarea> <br/>
        Filter&nbsp;<input style="width:20%" oninput="javascript:getJSON();" title="Input keywords likes 010(filter FUNCNO like 1003,1004 -f)" type="text" id="search" name="search" class="input-small search-query">
         <font  id="msg"> </font>  
+       <input type="checkbox" id="repack">RePack</input> 
        <input type="button" style="float:right" class="btn btn-info" id="btn" value="Resolves" onClick="javascript:getJSON();"/>
        
        <TABLE>
