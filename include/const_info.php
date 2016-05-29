@@ -6,11 +6,11 @@ ini_set("display_errors","Off");
 static $NeedTranslate=true;
 define('FIX_FLAG','FIXT');
 //通用_调用和返回log标志
-define('LOG0','InPara');
-define('LOG1','OutPara');
+define('LOG_IN','InPara');
+define('LOG_OUT','OutPara');
 //五版_调用和返回log标志
-define('FIX_LOG0','incomeing:');
-define('FIX_LOG1','outgoing:');
+define('FIX_IN','incomeing:');
+define('FIX_OUT','outgoing:');
 /////////dictionary///////////////
 $fixdict= array('010' =>  '现货' ,
 				'020' =>  '质押式回购' ,

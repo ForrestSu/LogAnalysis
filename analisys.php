@@ -7,6 +7,7 @@
  */
 header("Content-Type: text/json;charset=utf-8");
 require_once('./include/const_info.php');
+require_once('./include/const_nyfix.php');
 
 define('SPLIT_CHAR',chr(1));//定义一个ASCII常量SOH
 class Message{
@@ -73,12 +74,13 @@ exit(0);
         foreach($lines as $oneline){
            $oneline= trim($oneline);//去除首尾的"\0" "\t" "\n" "\r" "\x0B" " "
            if(strlen($oneline) < 2 ) continue;//过滤空行
-           //distinct fix_log or tran_log 
-           $pos = strpos($oneline, FIX_FLAG);
-           if($pos !== false)  //if fix_log
-             $msg = my_unpack($oneline,'fix_log',FIX_LOG0,FIX_LOG1,$GLOBALS['FiltStr']);
+           //distinct nyfix_log、fix_log or tran_log 
+           if(strpos($oneline, NYFIX_FLAG)!== false)  //if nyfix_log
+              $msg = my_unpack($oneline,'nyfix_log',NYFIX_IN,NYFIX_OUT,$GLOBALS['FiltStr']);
+           else if(strpos($oneline, FIX_FLAG)!=false) //if fix_log
+             $msg = my_unpack($oneline,'fix_log',FIX_IN,FIX_OUT,$GLOBALS['FiltStr']);
            else
-             $msg = my_unpack($oneline,'tran_log',LOG0,LOG1,$GLOBALS['FiltStr']);
+             $msg = my_unpack($oneline,'tran_log',LOG_IN,LOG_OUT,$GLOBALS['FiltStr']);
            if($msg->data !=null)
             $objs[$cnt++]=$msg;
         }//end deal
@@ -105,6 +107,48 @@ exit(0);
              return PackMsgErr(-1,'['.$oneline.']不是标准的FIX(Packet)数据包');
         }
     }
+    //0 解析一行nyfix日志
+     function nyfix_log($oneline,$message_type,$tag,$filter){ 
+        //特殊处理
+        $tag='} [';
+        $obj=new Message();
+        //设置消息类型
+        $obj->message_type=$message_type+2;
+        //定义数组
+        $arr01 = array();
+        $arrlog = array();
+        $ResultSet = array();
+        $GLOBAL_BUSSI_DICT= $GLOBALS['nyfixdict'];//全局业务标志
+        $cnt = 0;
+
+        $arr01 = explode($tag, $oneline);
+        $logbody = trim($arr01[1],' ]');// filter character in ' ]'
+        //如果指定了过滤字符，当前数据包全文过滤字符
+        if((!empty($filter)) and (strpos($logbody,$filter)===false)) return $obj; 
+        //如果不是空数据包
+        if(strlen($logbody)>1 and (strpos($logbody,SPLIT_CHAR) !== false) ){
+            $arrlog = explode(SPLIT_CHAR,$logbody);
+            foreach($arrlog as $one){
+                $pos=strpos($one,'=');
+                if($pos!==false){
+                    $tmpkey=substr($one,0,$pos);
+                    if($tmpkey<>''){
+                      //need translate Key to value, at first check key must exsist!
+                       if(array_key_exists($tmpkey,$GLOBAL_BUSSI_DICT)) 
+                          $tmpkey = $GLOBAL_BUSSI_DICT[$tmpkey].'('.$tmpkey.')';
+                       if (empty($ResultSet[$tmpkey])) $ResultSet[$tmpkey]= substr($one,$pos+1);
+                       else $ResultSet[$tmpkey]=$ResultSet[$tmpkey].'<br/>'.substr($one,$pos+1);
+                    }  
+                }       
+            }
+        }
+        if(count($ResultSet)>0)
+        {  
+            $obj->data=$ResultSet; 
+        }
+        return $obj;
+    }
+
     //1 解析一行 fix 日志
     function fix_log($oneline,$message_type,$tag,$filter){ 
         $obj=new Message();
