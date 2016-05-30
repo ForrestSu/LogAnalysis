@@ -7,7 +7,8 @@
  */
 header("Content-Type: text/json;charset=utf-8");
 require_once('./include/const_info.php');
-require_once('./include/const_nyfix.php');
+require_once('./include/const_public.php');
+require_once('./include/dictionary_nyfix.php');
 
 define('SPLIT_CHAR',chr(1));//定义一个ASCII常量SOH
 class Message{
@@ -110,7 +111,6 @@ exit(0);
     //0 解析一行nyfix日志
      function nyfix_log($oneline,$message_type,$tag,$filter){ 
         //特殊处理
-        $tag='} [';
         $obj=new Message();
         //设置消息类型
         $obj->message_type=$message_type+2;
@@ -121,7 +121,7 @@ exit(0);
         $GLOBAL_BUSSI_DICT= $GLOBALS['nyfixdict'];//全局业务标志
         $cnt = 0;
 
-        $arr01 = explode($tag, $oneline);
+        $arr01 = explode('} [', $oneline);
         $logbody = trim($arr01[1],' ]');// filter character in ' ]'
         //如果指定了过滤字符，当前数据包全文过滤字符
         if((!empty($filter)) and (strpos($logbody,$filter)===false)) return $obj; 
