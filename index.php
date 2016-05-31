@@ -35,6 +35,7 @@
         document.getElementById("user_rec").innerHTML="";
         var retset = new Array();
         retset =resp.data; 
+        if(retset ===null) return 0;
         for(var n=0;n<retset.length;n++)
         {
             var jsonObj={};

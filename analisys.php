@@ -8,7 +8,7 @@
 header("Content-Type: text/json;charset=utf-8");
 require_once('./include/const_info.php');
 require_once('./include/const_public.php');
-require_once('./include/dictionary_nyfix.php');
+require_once("./include/nyfix_cn.php");
 
 define('SPLIT_CHAR',chr(1));//定义一个ASCII常量SOH
 class Message{
