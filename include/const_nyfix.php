@@ -8,5 +8,4 @@ define('NYFIX_FLAG', '8=FIX.4.2');
 define('NYFIX_IN','Received data');
 define('NYFIX_OUT','Sending data');
 
-
 ?>

@@ -6,9 +6,12 @@
  * @date  : 2015-12-19 22:54:12
  */
 header("Content-Type: text/json;charset=utf-8");
-require_once('./include/const_info.php');
-require_once('./include/const_public.php');
-require_once("./include/nyfix_cn.php");
+require_once('./include/public.inc.php');
+require_once('./include/const_pack.php');
+require_once('./include/const_nyfix.php');
+require_once('./setlang.php');
+if(isset($OJ_LANG)) require_once("./include/nyfix_$OJ_LANG.php");
+else  require_once('./include/nyfix_cn.php');
 
 define('SPLIT_CHAR',chr(1));//定义一个ASCII常量SOH
 class Message{
@@ -260,12 +263,12 @@ exit(0);
         if($cnt>0) $obj->data=$ResultSet;
         return $obj;    
     }
-    /* function write_to_log($str) {
+  /*  function write_to_log($str) {
        $str = str_replace(array("\r\n", "\r", "\n"), "<soh>", $str); 
        $str='【'.date('Y-m-d H:i:s').'】'.$str."\r\n";
        if($fd = @fopen('log.log', "a")) {
           fputs($fd, $str);
           fclose($fd);
        }
-    }     */
+    } */     
 ?>
