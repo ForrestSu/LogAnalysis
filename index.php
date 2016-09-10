@@ -101,7 +101,7 @@
        <textarea style="width:100%" cols="30" rows="4" id="input_text" name="input_text" maxlength="300000"></textarea> <br/>
        Filter&nbsp;<input style="width:20%" oninput="javascript:getJSON();" title="Input keywords likes 010(filter FUNCNO like 1003,1004 -f)" type="text" id="search" name="search" class="input-small search-query">
         <font  id="msg"> </font>  
-       <input type="checkbox" id="repack">RePack</input> 
+       <input type="checkbox" id="repack">FilterNoSupportLogs</input> 
        <input type="button" style="float:right" class="btn btn-info" id="btn" value="Resolves" onClick="javascript:getJSON();"/>
        
        <TABLE>

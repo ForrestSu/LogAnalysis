@@ -64,6 +64,7 @@ exit(0);
          $ret =new Message();
          $ret->message_type = $msg_type;
          $ret->data = $error_info;
+         if($GLOBALS['RePack']) $ret->data = null;//Filter no support Logs
          return $ret;
     }
     function AnalisysLog($content){
@@ -78,13 +79,23 @@ exit(0);
         foreach($lines as $oneline){
            $oneline= trim($oneline);//去除首尾的"\0" "\t" "\n" "\r" "\x0B" " "
            if(strlen($oneline) < 2 ) continue;//过滤空行
-           //distinct nyfix_log、fix_log or tran_log 
-           if(strpos($oneline, NYFIX_FLAG)!== false)  //if nyfix_log
-              $msg = my_unpack($oneline,'nyfix_log',NYFIX_IN,NYFIX_OUT,$GLOBALS['FiltStr']);
-           else if(strpos($oneline, FIX_FLAG)!=false) //if fix_log
-             $msg = my_unpack($oneline,'fix_log',FIX_IN,FIX_OUT,$GLOBALS['FiltStr']);
-           else
-             $msg = my_unpack($oneline,'tran_log',LOG_IN,LOG_OUT,$GLOBALS['FiltStr']);
+           
+            /*  1 五版FIX转换机
+            if(strpos($oneline, FIX_FLAG)!== false)
+                $msg = my_unpack($oneline,'fix_log',FIX_IN,FIX_OUT,$GLOBALS['FiltStr']); 
+            //1 if Nyfix 转换机日志
+            else */ 
+            if(strpos($oneline, FIX_FLAG )!== false)  
+               $msg = my_unpack($oneline,'nyfix_log',FIX_IN,FIX_OUT,$GLOBALS['FiltStr']);
+            //2 和券商测试Nyfix Appia logs
+            else if(strpos($oneline, NYFIX_TEST)!== false)  
+               $msg = my_unpack($oneline,'nyfix_log',NYFIX_TEST_IN,NYFIX_TEST_OUT,$GLOBALS['FiltStr']);
+            //3 if 客户 NyfixAppia Engine logs
+            else if(strpos($oneline, NYFIX_CUSTOMER)!== false)  
+               $msg = my_unpack($oneline,'nyfix_log',NYFIX_IN,NYFIX_OUT,$GLOBALS['FiltStr']);
+            //4 tran log 
+            else
+               $msg = my_unpack($oneline,'tran_log',LOG_IN,LOG_OUT,$GLOBALS['FiltStr']);
            if($msg->data !=null)
             $objs[$cnt++]=$msg;
         }//end deal
@@ -100,10 +111,10 @@ exit(0);
     }
      
     function my_unpack($oneline,$func,$in,$out,$filter){
-        // 如果是入参
+        // 如果是接收数据
         if(strpos($oneline,$in) !== false){  
             return $func($oneline,0,$in,$filter);                   
-        }// 如果是出参
+        }// 如果是发送数据
         else if(strpos($oneline,$out) !== false){
              return $func($oneline,1,$out,$filter);           
         }// 不支持的数据包
@@ -122,9 +133,12 @@ exit(0);
         $arrlog = array();
         $ResultSet = array();
         $GLOBAL_BUSSI_DICT= $GLOBALS['nyfixdict'];//全局业务标志
+        $GLOBAL_DEALTYPE_DICT =$GLOBALS['nyfixdealtype150'];
         $cnt = 0;
+        $digist='';
+        $flag = 0;
 
-        $arr01 = explode('} [', $oneline);
+        $arr01 = explode($tag, $oneline);
         $logbody = trim($arr01[1],' ]');// filter character in ' ]'
         //如果指定了过滤字符，当前数据包全文过滤字符
         if((!empty($filter)) and (strpos($logbody,$filter)===false)) return $obj; 
@@ -136,17 +150,35 @@ exit(0);
                 if($pos!==false){
                     $tmpkey=substr($one,0,$pos);
                     if($tmpkey<>''){
-                      //need translate Key to value, at first check key must exsist!
-                       if(array_key_exists($tmpkey,$GLOBAL_BUSSI_DICT)) 
-                          $tmpkey = $GLOBAL_BUSSI_DICT[$tmpkey].'('.$tmpkey.')';
-                       if (empty($ResultSet[$tmpkey])) $ResultSet[$tmpkey]= substr($one,$pos+1);
-                       else $ResultSet[$tmpkey]=$ResultSet[$tmpkey].'<br/>'.substr($one,$pos+1);
+                        $tempvalue = substr($one,$pos+1);
+                        if( ($tmpkey==6)or($tmpkey==31) or ($tmpkey==32)or ($tmpkey==150) or ($tmpkey==11) )$flag=1;
+                        //need translate Key to value, at first check key must exsist!
+                        if(array_key_exists($tmpkey,$GLOBAL_BUSSI_DICT)){
+                            //对于150的key 做值域解析
+                            if($tmpkey==150)
+                            {
+                                if(array_key_exists($tempvalue,$GLOBAL_DEALTYPE_DICT))
+                                   $tempvalue = $GLOBAL_DEALTYPE_DICT[$tempvalue].'('.$tempvalue.')';
+                            }
+                            $tmpkey = $GLOBAL_BUSSI_DICT[$tmpkey].'('.$tmpkey.')';
+                        }
+                        if (empty($ResultSet[$tmpkey])) $ResultSet[$tmpkey]= $tempvalue;
+                        else $ResultSet[$tmpkey]=$ResultSet[$tmpkey].'<br/>'.$tempvalue;
+                         
+                        if ($flag==1){$digist=$digist.$tmpkey.'='.$tempvalue.'  ';$flag=0;} 
                     }  
                 }       
             }
         }
         if(count($ResultSet)>0)
         {  
+            //回报报文信息摘要
+            if($digist<>''){
+               if($message_type==1) $mykey='(0)发送报文信息摘要';
+               else $mykey='(1)接收报文信息摘要';
+               $ResultSet[$mykey]= $digist; 
+                ksort($ResultSet);
+            }
             $obj->data=$ResultSet; 
         }
         return $obj;
@@ -161,7 +193,8 @@ exit(0);
         $arr01 = array();
         $arrlog = array();
         $ResultSet = array();
-        $GLOBAL_BUSSI_DICT= $GLOBALS['fixbuss'];//全局业务标志
+        // fixbuss  nyfixdict
+        $GLOBAL_BUSSI_DICT= $GLOBALS['fixbuss'];//FIX数据字典
         $cnt = 0;
 
         $arr01 = explode($tag, $oneline);

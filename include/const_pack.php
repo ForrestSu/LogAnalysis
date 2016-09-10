@@ -4,7 +4,7 @@ ini_set("display_errors","Off");
  * 根据是否含有FIXT判断是否为fix日志
  */
 static $NeedTranslate=true;
-define('FIX_FLAG','FIXT');
+define('FIX_FLAG','ing: ');
 //通用_调用和返回log标志
 define('LOG_IN','InPara');
 define('LOG_OUT','OutPara');
