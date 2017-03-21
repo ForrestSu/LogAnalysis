@@ -402,6 +402,15 @@ kbd {
     color: green; /*deep-green, green=#008000*/
     white-space: nowrap;
 }
+
+/*以下为sunquan 自定义的style*/
+#profile {
+    font-size: 13px;
+    text-align: right;
+    z-index:100;
+}
+
+/*--------------end-----------*/
 /* Syntax highlight */
 .codehilite  { background: #ffffff; }
 .codehilite .c { color: #999988; font-style: italic } /* Comment */
