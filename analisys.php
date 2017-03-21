@@ -83,19 +83,17 @@ exit(0);
             /*  1 五版FIX转换机
             if(strpos($oneline, FIX_FLAG)!== false)
                 $msg = my_unpack($oneline,'fix_log',FIX_IN,FIX_OUT,$GLOBALS['FiltStr']); 
-            //1 if Nyfix 转换机日志
             else */ 
-            if(strpos($oneline, FIX_FLAG )!== false)  
-               $msg = my_unpack($oneline,'nyfix_log',FIX_IN,FIX_OUT,$GLOBALS['FiltStr']);
-            //2 和券商测试Nyfix Appia logs
-            else if(strpos($oneline, NYFIX_TEST)!== false)  
+            if(strpos($oneline, FIX_FLAG )!== false){ //1 if Nyfix 转换机日志
+               $msg = my_unpack($oneline,'nyfix_log',FIX_IN,FIX_OUT,$GLOBALS['FiltStr']); 
+            }
+            else if(strpos($oneline, NYFIX_TEST)!== false){  //2 和券商测试Nyfix Appia logs
                $msg = my_unpack($oneline,'nyfix_log',NYFIX_TEST_IN,NYFIX_TEST_OUT,$GLOBALS['FiltStr']);
-            //3 if 客户 NyfixAppia Engine logs
-            else if(strpos($oneline, NYFIX_CUSTOMER)!== false)  
-               $msg = my_unpack($oneline,'nyfix_log',NYFIX_IN,NYFIX_OUT,$GLOBALS['FiltStr']);
-            //4 tran log 
-            else
-               $msg = my_unpack($oneline,'tran_log',LOG_IN,LOG_OUT,$GLOBALS['FiltStr']);
+            }  
+            else if(strpos($oneline, NYFIX_CUSTOMER)!== false){//3 if 客户 NyfixAppia Engine logs
+               $msg = my_unpack($oneline,'nyfix_log',NYFIX_IN,NYFIX_OUT,$GLOBALS['FiltStr']);}     
+            else{//4 tran log
+               $msg = my_unpack($oneline,'tran_log',LOG_IN,LOG_OUT,$GLOBALS['FiltStr']);}
            if($msg->data !=null)
             $objs[$cnt++]=$msg;
         }//end deal
@@ -177,7 +175,7 @@ exit(0);
                if($message_type==1) $mykey='(0)发送报文信息摘要';
                else $mykey='(1)接收报文信息摘要';
                $ResultSet[$mykey]= $digist; 
-                ksort($ResultSet);
+               ksort($ResultSet);
             }
             $obj->data=$ResultSet; 
         }

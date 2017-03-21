@@ -86,6 +86,20 @@
             }
         }
     }
+    $(function(){
+      var userAgents=navigator.userAgent;
+      var result="推荐使用Chrome";
+      if(userAgents.indexOf("MSIE")>-1){
+        result="当前浏览器为IE,推荐使用Chrome";
+      }else if(userAgents.indexOf("rv:11.0")>-1){
+        result="当前浏览器为IE11,推荐使用Chrome";
+      }else if(userAgents.indexOf("Edge")>-1){
+        result="当前浏览器为Edge,推荐使用Chrome";
+      }else if(userAgents.indexOf("Chrome")>-1){
+        result="";
+      }
+      document.getElementById("browsertype").innerHTML=result;  
+    });
     </script>
 </head>
 <body>
@@ -93,6 +107,7 @@
  
    <div id="markup">
    <div id="profile" >
+        <font  id="browsertype" color="red"></font> 
        <a href="./setlang.php?lang=en">English</a>
        <a href="./setlang.php?lang=cn">Chinese</a>
    </div>
@@ -100,7 +115,7 @@
        <h3>Log Analysis v1.2</h3>
        <textarea style="width:100%" cols="30" rows="4" id="input_text" name="input_text" maxlength="300000"></textarea> <br/>
        Filter&nbsp;<input style="width:20%" oninput="javascript:getJSON();" title="Input keywords likes 010(filter FUNCNO like 1003,1004 -f)" type="text" id="search" name="search" class="input-small search-query">
-        <font  id="msg"> </font>  
+        <font id="msg"> </font>  
        <input type="checkbox" id="repack">FilterNoSupportLogs</input> 
        <input type="button" style="float:right" class="btn btn-info" id="btn" value="Resolves" onClick="javascript:getJSON();"/>
        
