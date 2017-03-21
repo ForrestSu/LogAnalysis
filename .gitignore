@@ -1,0 +1,12 @@
+doc/performance_graph.xlsx
+jquery/jquery-1.11.2.js
+Thumbs.db
+api
+*.class
+*.rar    
+*.tar    
+*.zip
+*.war
+map.ini
+test.php
+log.log
