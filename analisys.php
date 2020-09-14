@@ -79,7 +79,7 @@ exit(0);
         foreach($lines as $oneline){
            $oneline= trim($oneline);//去除首尾的"\0" "\t" "\n" "\r" "\x0B" " "
            if(strlen($oneline) < 2 ) continue;//过滤空行
-           
+
             /*  1 五版FIX转换机
             if(strpos($oneline, FIX_FLAG)!== false)
                 $msg = my_unpack($oneline,'fix_log',FIX_IN,FIX_OUT,$GLOBALS['FiltStr']); 
@@ -137,7 +137,7 @@ exit(0);
         $flag = 0;
 
         $arr01 = explode($tag, $oneline);
-        $logbody = trim($arr01[1],' ]');// filter character in ' ]'
+        $logbody = trim($arr01[1],' )]');// filter character in ' )]'
         //如果指定了过滤字符，当前数据包全文过滤字符
         if((!empty($filter)) and (strpos($logbody,$filter)===false)) return $obj; 
         //如果不是空数据包
