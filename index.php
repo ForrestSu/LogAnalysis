@@ -6,11 +6,11 @@
     <title>Log Analysis 1.2</title>
     <link rel=stylesheet href='files/style.css' type='text/css'>
     <link rel="shortcut icon" href="files/logo.ico">
-    <SCRIPT type="text/javascript" src="jquery/jquery-1.11.2.min.js"></SCRIPT> 
+    <SCRIPT type="text/javascript" src="jquery/jquery-1.11.2.min.js"></SCRIPT>
     <script type="text/javascript" language = "javascript" >
     function getJSON(){
       $.ajax({
-                url: "./analisys.php", 
+                url: "./analisys.php",
                 type: "POST",
                 data: {filtstr:document.getElementById("search").value,
                        logs:document.getElementById("input_text").value,
@@ -19,11 +19,11 @@
                 success: function (resp) {
                     showtable(resp);
                 }
-        }); 
-    /*    $.getJSON('./analisys.php',{funcno:document.getElementById("search").value,logs:document.getElementById("input_text").value },function(resp){   
+        });
+    /*    $.getJSON('./analisys.php',{funcno:document.getElementById("search").value,logs:document.getElementById("input_text").value },function(resp){
             showtable(resp);
        }); */
-    } 
+    }
     function showtable(resp)
     {
         if(resp.counts == -1){
@@ -34,7 +34,7 @@
         //清空之前解析的内容
         document.getElementById("user_rec").innerHTML="";
         var retset = new Array();
-        retset =resp.data; 
+        retset =resp.data;
         if(retset ===null) return 0;
         for(var n=0;n<retset.length;n++)
         {
@@ -42,7 +42,7 @@
              jsonObj=retset[n];
             var message_type = jsonObj.message_type;
             if(message_type == -1)
-            { 
+            {
                 $("#user_rec").append("<tr><td>error</td></tr><tr><td title=\""+jsonObj.data+"\">"+jsonObj.data+"</td></tr>");
                 continue;
             }
@@ -66,7 +66,7 @@
                     }
                      tds="td";
                      oBuffer=oBuffer+"</tr>";
-                    $("#user_rec").append(oBuffer); 
+                    $("#user_rec").append(oBuffer);
                   // "<td><a href=\"problem.php?id="+ data[i][0]+"\">"+data[i][1] +"</a></td>";
                }
             }else //2 五版日志
@@ -82,7 +82,7 @@
                 }
                 oBufferKey = oBufferKey+ "</tr>";
                 oBufferVal = oBufferVal+ "</tr>";
-                $("#user_rec").append(oBufferKey+oBufferVal); 
+                $("#user_rec").append(oBufferKey+oBufferVal);
             }
         }
     }
@@ -98,16 +98,16 @@
       }else if(userAgents.indexOf("Chrome")>-1){
         result="";
       }
-      document.getElementById("browsertype").innerHTML=result;  
+      document.getElementById("browsertype").innerHTML=result;
     });
     </script>
 </head>
 <body>
  <div class="container">
- 
+
    <div id="markup">
    <div id="profile" >
-        <font  id="browsertype" color="red"></font> 
+        <font  id="browsertype" color="red"></font>
        <a href="./setlang.php?lang=en">English</a>
        <a href="./setlang.php?lang=cn">Chinese</a>
    </div>
@@ -115,10 +115,10 @@
        <h3>Log Analysis v1.2</h3>
        <textarea style="width:100%" cols="30" rows="4" id="input_text" name="input_text" maxlength="300000"></textarea> <br/>
        Filter&nbsp;<input style="width:20%" oninput="javascript:getJSON();" title="Input keywords likes 010(filter FUNCNO like 1003,1004 -f)" type="text" id="search" name="search" class="input-small search-query">
-        <font id="msg"> </font>  
+        <font id="msg"> </font>
        <input type="checkbox" id="repack">FilterNoSupportLogs</input> 
        <input type="button" style="float:right" class="btn btn-info" id="btn" value="Resolves" onClick="javascript:getJSON();"/>
-       
+
        <TABLE>
           <tbody id="user_rec">
           </tbody>

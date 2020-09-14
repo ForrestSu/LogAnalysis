@@ -3,8 +3,8 @@ jquery/jquery-1.11.2.js
 Thumbs.db
 api
 *.class
-*.rar    
-*.tar    
+*.rar
+*.tar
 *.zip
 *.war
 map.ini
